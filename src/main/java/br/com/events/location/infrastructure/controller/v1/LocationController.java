@@ -6,6 +6,7 @@ import br.com.events.location.data.inbound.Country;
 import br.com.events.location.data.inbound.State;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -23,10 +24,22 @@ public interface LocationController {
     ResponseEntity<List<Country>> getAllCountries();
 
     @ApiOperation(value = "Get all states of a country by its iso2")
-    ResponseEntity<List<State>> getAllStatesByCountryIso2(String countryIso);
+    ResponseEntity<List<State>> getAllStatesByCountryIso2(
+            @ApiParam("Country's iso2") String countryIso
+    );
 
     @ApiOperation(value = "Get all cities of a state by its iso2 and it's country iso2")
-    ResponseEntity<List<City>> getAllCitiesByStateAndCountryIso2(String countryIso, String stateIso);
+    ResponseEntity<List<City>> getAllCitiesByStateAndCountryIso2(
+            @ApiParam("Country's iso2") String countryIso,
+            @ApiParam("State's iso2") String stateIso
+    );
+
+    @ApiOperation(value = "Get a city by its id and its state and country iso2")
+    ResponseEntity<City> getCityByIdAndStateAndCountryIso(
+            @ApiParam("Country's iso2") String countryIso,
+            @ApiParam("State's iso2") String stateIso,
+            @ApiParam("City's id") Long cityId
+    );
 
     @ApiOperation(value = "Get all cities of a state by its iso2 and it's country iso2")
     ResponseEntity<Void> validateIfAddressExists(Address address);

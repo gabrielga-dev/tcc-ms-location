@@ -52,6 +52,16 @@ public class LocationControllerImpl implements LocationController {
     }
 
     @Override
+    @GetMapping("/country/{countryIso}/state/{stateIso}/city/{cityId}")
+    public ResponseEntity<City> getCityByIdAndStateAndCountryIso(
+            @PathVariable("countryIso") String countryIso,
+            @PathVariable("stateIso") String stateIso,
+            @PathVariable("cityId") Long cityId
+    ) {
+        return ResponseEntity.ok(locationService.getCityByIdAndStateAndCountryIso(countryIso, stateIso, cityId));
+    }
+
+    @Override
     @GetMapping("/check-address")
     public ResponseEntity<Void> validateIfAddressExists(@Valid Address address) {
         locationService.validateIfAddressExists(address);

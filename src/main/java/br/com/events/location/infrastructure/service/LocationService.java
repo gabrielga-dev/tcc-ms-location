@@ -15,5 +15,7 @@ public interface LocationService {
 
     List<City> getAllCitiesByStateIso2(String countryIso, String stateIso);
 
+    City getCityByIdAndStateAndCountryIso(String countryIso, String stateIso, Long cityId);
+
     void validateIfAddressExists(Address address);
 }
