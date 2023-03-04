@@ -1,9 +1,6 @@
 package br.com.events.location.infrastructure.feign.countryStateCity;
 
 import br.com.events.location.application.config.feign.CountryStateCityFeignClientConfiguration;
-import br.com.events.location.data.feign.countryStateCity.getCitiesByStateAndCountryIso2.out.GetCitiesByStateAndCountryByIso2CountryStateCityFeignResult;
-import br.com.events.location.data.feign.countryStateCity.getCountries.out.GetCountriesCountryStateCityFeignResult;
-import br.com.events.location.data.feign.countryStateCity.getStatesByCountryIso2.out.GetStatesByCountryByIso2CountryStateCityFeignResult;
 import br.com.events.location.data.inbound.City;
 import br.com.events.location.data.inbound.Country;
 import br.com.events.location.data.inbound.State;

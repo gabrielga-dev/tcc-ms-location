@@ -1,5 +1,6 @@
 package br.com.events.location.application.controller.v1;
 
+import br.com.events.location.data.inbound.Address;
 import br.com.events.location.data.inbound.City;
 import br.com.events.location.data.inbound.Country;
 import br.com.events.location.data.inbound.State;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -47,5 +49,12 @@ public class LocationControllerImpl implements LocationController {
             @PathVariable("stateIso") String stateIso
     ) {
         return ResponseEntity.ok(locationService.getAllCitiesByStateIso2(countryIso, stateIso));
+    }
+
+    @Override
+    @GetMapping("/check-address")
+    public ResponseEntity<Void> validateIfAddressExists(@Valid Address address) {
+        locationService.validateIfAddressExists(address);
+        return ResponseEntity.noContent().build();
     }
 }

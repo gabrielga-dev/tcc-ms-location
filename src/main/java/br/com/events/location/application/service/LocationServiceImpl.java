@@ -1,6 +1,8 @@
 package br.com.events.location.application.service;
 
+import br.com.events.location.application.service.exception.AddressNotFoundException;
 import br.com.events.location.application.service.exception.CommunicationToCountryStateCityServerException;
+import br.com.events.location.data.inbound.Address;
 import br.com.events.location.data.inbound.City;
 import br.com.events.location.data.inbound.Country;
 import br.com.events.location.data.inbound.State;
@@ -11,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -48,6 +51,27 @@ public class LocationServiceImpl implements LocationService {
         } catch (Exception e) {
             log.error("Error communicating to country state city: {}", e.getMessage());
             e.printStackTrace();
+            throw new CommunicationToCountryStateCityServerException();
+        }
+    }
+
+    @Override
+    public void validateIfAddressExists(Address address) {
+        try {
+            var citiesResponse = countryStateCityFeignClient.getCitiesByStateAndCountryIso2(
+                    address.getCountryIso(), address.getStateIso()
+            );
+            var cities = Objects.requireNonNull(citiesResponse.getBody());
+
+            cities.stream().filter(
+                            feignCity -> Objects.equals(address.getCityId(), feignCity.getId())
+                    ).findFirst()
+                    .orElseThrow(
+                        AddressNotFoundException::new
+                    );
+        } catch (NullPointerException npe) {
+            log.error("Error communicating to country state city");
+            npe.printStackTrace();
             throw new CommunicationToCountryStateCityServerException();
         }
     }

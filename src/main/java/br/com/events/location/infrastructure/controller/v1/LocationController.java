@@ -1,5 +1,6 @@
 package br.com.events.location.infrastructure.controller.v1;
 
+import br.com.events.location.data.inbound.Address;
 import br.com.events.location.data.inbound.City;
 import br.com.events.location.data.inbound.Country;
 import br.com.events.location.data.inbound.State;
@@ -26,4 +27,7 @@ public interface LocationController {
 
     @ApiOperation(value = "Get all cities of a state by its iso2 and it's country iso2")
     ResponseEntity<List<City>> getAllCitiesByStateAndCountryIso2(String countryIso, String stateIso);
+
+    @ApiOperation(value = "Get all cities of a state by its iso2 and it's country iso2")
+    ResponseEntity<Void> validateIfAddressExists(Address address);
 }
