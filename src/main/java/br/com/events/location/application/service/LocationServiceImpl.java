@@ -1,7 +1,10 @@
 package br.com.events.location.application.service;
 
 import br.com.events.location.application.service.exception.AddressNotFoundException;
+import br.com.events.location.application.service.exception.CityNotFound;
 import br.com.events.location.application.service.exception.CommunicationToCountryStateCityServerException;
+import br.com.events.location.application.service.exception.CountryNotFound;
+import br.com.events.location.application.service.exception.StateNotFound;
 import br.com.events.location.data.inbound.Address;
 import br.com.events.location.data.inbound.City;
 import br.com.events.location.data.inbound.Country;
@@ -37,6 +40,8 @@ public class LocationServiceImpl implements LocationService {
     public List<State> getAllStatesByCountryIso2(String countryIso2) {
         try {
             return countryStateCityFeignClient.getStatesByCountryIso2(countryIso2).getBody();
+        } catch (NullPointerException e) {
+            throw new CountryNotFound();
         } catch (Exception e) {
             log.error("Error communicating to country state city: {}", e.getMessage());
             e.printStackTrace();
@@ -48,11 +53,23 @@ public class LocationServiceImpl implements LocationService {
     public List<City> getAllCitiesByStateIso2(String countryIso, String stateIso) {
         try {
             return countryStateCityFeignClient.getCitiesByStateAndCountryIso2(countryIso, stateIso).getBody();
+        } catch (NullPointerException e) {
+            throw new StateNotFound();
         } catch (Exception e) {
             log.error("Error communicating to country state city: {}", e.getMessage());
             e.printStackTrace();
             throw new CommunicationToCountryStateCityServerException();
         }
+    }
+
+    @Override
+    public City getCityByIdAndStateAndCountryIso(String countryIso, String stateIso, Long cityId) {
+        return getAllCitiesByStateIso2(countryIso, stateIso).stream()
+                .filter(city -> Objects.equals(city.getId(), cityId))
+                .findFirst()
+                .orElseThrow(
+                        CityNotFound::new
+                );
     }
 
     @Override
@@ -67,7 +84,7 @@ public class LocationServiceImpl implements LocationService {
                             feignCity -> Objects.equals(address.getCityId(), feignCity.getId())
                     ).findFirst()
                     .orElseThrow(
-                        AddressNotFoundException::new
+                            AddressNotFoundException::new
                     );
         } catch (NullPointerException npe) {
             log.error("Error communicating to country state city");
