@@ -1,9 +1,9 @@
 package br.com.events.location.application.controller.v1;
 
 import br.com.events.location.data.inbound.Address;
-import br.com.events.location.data.inbound.City;
-import br.com.events.location.data.inbound.Country;
-import br.com.events.location.data.inbound.State;
+import br.com.events.location.data.inbound.CityResponse;
+import br.com.events.location.data.inbound.CountryResponse;
+import br.com.events.location.data.inbound.StateResponse;
 import br.com.events.location.infrastructure.controller.v1.LocationController;
 import br.com.events.location.infrastructure.service.LocationService;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +30,13 @@ public class LocationControllerImpl implements LocationController {
 
     @Override
     @GetMapping("/countries")
-    public ResponseEntity<List<Country>> getAllCountries() {
+    public ResponseEntity<List<CountryResponse>> getAllCountries() {
         return ResponseEntity.ok(locationService.getAllCountries());
     }
 
     @Override
     @GetMapping("/country/{countryIso}/states")
-    public ResponseEntity<List<State>> getAllStatesByCountryIso2(
+    public ResponseEntity<List<StateResponse>> getAllStatesByCountryIso2(
             @PathVariable("countryIso") String countryIso
     ) {
         return ResponseEntity.ok(locationService.getAllStatesByCountryIso2(countryIso));
@@ -44,7 +44,7 @@ public class LocationControllerImpl implements LocationController {
 
     @Override
     @GetMapping("/country/{countryIso}/state/{stateIso}/cities")
-    public ResponseEntity<List<City>> getAllCitiesByStateAndCountryIso2(
+    public ResponseEntity<List<CityResponse>> getAllCitiesByStateAndCountryIso2(
             @PathVariable("countryIso") String countryIso,
             @PathVariable("stateIso") String stateIso
     ) {
@@ -53,7 +53,7 @@ public class LocationControllerImpl implements LocationController {
 
     @Override
     @GetMapping("/country/{countryIso}/state/{stateIso}/city/{cityId}")
-    public ResponseEntity<City> getCityByIdAndStateAndCountryIso(
+    public ResponseEntity<CityResponse> getCityByIdAndStateAndCountryIso(
             @PathVariable("countryIso") String countryIso,
             @PathVariable("stateIso") String stateIso,
             @PathVariable("cityId") Long cityId

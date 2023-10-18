@@ -1,9 +1,9 @@
 package br.com.events.location.infrastructure.feign.countryStateCity;
 
 import br.com.events.location.application.config.feign.CountryStateCityFeignClientConfiguration;
-import br.com.events.location.data.inbound.City;
-import br.com.events.location.data.inbound.Country;
-import br.com.events.location.data.inbound.State;
+import br.com.events.location.data.inbound.CityResponse;
+import br.com.events.location.data.inbound.CountryResponse;
+import br.com.events.location.data.inbound.StateResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,15 +24,15 @@ import java.util.List;
 public interface CountryStateCityFeignClient {
 
     @GetMapping("/countries")
-    ResponseEntity<List<Country>> getCountries();
+    ResponseEntity<List<CountryResponse>> getCountries();
 
     @GetMapping("/countries/{countryIso}/states")
-    ResponseEntity<List<State>> getStatesByCountryIso2(
+    ResponseEntity<List<StateResponse>> getStatesByCountryIso2(
         @PathVariable("countryIso") String countryIso
     );
 
     @GetMapping("/countries/{countryIso}/states/{stateIso}/cities")
-    ResponseEntity<List<City>> getCitiesByStateAndCountryIso2(
+    ResponseEntity<List<CityResponse>> getCitiesByStateAndCountryIso2(
         @PathVariable("countryIso") String countryIso,
         @PathVariable("stateIso") String stateIso
     );

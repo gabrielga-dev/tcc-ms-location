@@ -1,0 +1,16 @@
+INSERT INTO city (id, name, state_id) VALUES (10204, 'Amapá',  1999);
+INSERT INTO city (id, name, state_id) VALUES (10933, 'Calçoene',  1999);
+INSERT INTO city (id, name, state_id) VALUES (11541, 'Cutias',  1999);
+INSERT INTO city (id, name, state_id) VALUES (11812, 'Ferreira Gomes',  1999);
+INSERT INTO city (id, name, state_id) VALUES (12462, 'Itaubal',  1999);
+INSERT INTO city (id, name, state_id) VALUES (12798, 'Laranjal do Jari',  1999);
+INSERT INTO city (id, name, state_id) VALUES (12887, 'Macapá',  1999);
+INSERT INTO city (id, name, state_id) VALUES (13088, 'Mazagão',  1999);
+INSERT INTO city (id, name, state_id) VALUES (13492, 'Oiapoque',  1999);
+INSERT INTO city (id, name, state_id) VALUES (13751, 'Pedra Branca do Amapari',  1999);
+INSERT INTO city (id, name, state_id) VALUES (14008, 'Porto Grande',  1999);
+INSERT INTO city (id, name, state_id) VALUES (14058, 'Pracuúba',  1999);
+INSERT INTO city (id, name, state_id) VALUES (14568, 'Santana',  1999);
+INSERT INTO city (id, name, state_id) VALUES (14739, 'Serra do Navio',  1999);
+INSERT INTO city (id, name, state_id) VALUES (15255, 'Tartarugalzinho',  1999);
+INSERT INTO city (id, name, state_id) VALUES (15602, 'Vitória do Jari',  1999);

@@ -3,12 +3,12 @@ package br.com.events.location.application.service;
 import br.com.events.location.application.service.exception.AddressNotFoundException;
 import br.com.events.location.application.service.exception.CityNotFound;
 import br.com.events.location.application.service.exception.CommunicationToCountryStateCityServerException;
-import br.com.events.location.application.service.exception.CountryNotFound;
-import br.com.events.location.application.service.exception.StateNotFound;
 import br.com.events.location.data.inbound.Address;
-import br.com.events.location.data.inbound.City;
-import br.com.events.location.data.inbound.Country;
-import br.com.events.location.data.inbound.State;
+import br.com.events.location.data.inbound.CityResponse;
+import br.com.events.location.data.inbound.CountryResponse;
+import br.com.events.location.data.inbound.StateResponse;
+import br.com.events.location.data.repository.CountryRepository;
+import br.com.events.location.data.repository.StateRepository;
 import br.com.events.location.infrastructure.feign.countryStateCity.CountryStateCityFeignClient;
 import br.com.events.location.infrastructure.service.LocationService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -24,46 +25,38 @@ import java.util.Objects;
 public class LocationServiceImpl implements LocationService {
 
     private final CountryStateCityFeignClient countryStateCityFeignClient;
+    private final CountryRepository countryRepository;
+    private final StateRepository stateRepository;
 
     @Override
-    public List<Country> getAllCountries() {
-        try {
-            return countryStateCityFeignClient.getCountries().getBody();
-        } catch (Exception e) {
-            log.error("Error communicating to country state city: {}", e.getMessage());
-            e.printStackTrace();
-            throw new CommunicationToCountryStateCityServerException();
-        }
+    public List<CountryResponse> getAllCountries() {
+        return countryRepository.findAll().stream().map(CountryResponse::new).collect(Collectors.toList());
     }
 
     @Override
-    public List<State> getAllStatesByCountryIso2(String countryIso2) {
-        try {
-            return countryStateCityFeignClient.getStatesByCountryIso2(countryIso2).getBody();
-        } catch (NullPointerException e) {
-            throw new CountryNotFound();
-        } catch (Exception e) {
-            log.error("Error communicating to country state city: {}", e.getMessage());
-            e.printStackTrace();
-            throw new CommunicationToCountryStateCityServerException();
-        }
+    public List<StateResponse> getAllStatesByCountryIso2(String countryIso2) {
+        return countryRepository.findByIso2(countryIso2)
+                .orElseThrow(CommunicationToCountryStateCityServerException::new)
+                .getStates()
+                .stream()
+                .map(StateResponse::new)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<City> getAllCitiesByStateIso2(String countryIso, String stateIso) {
-        try {
-            return countryStateCityFeignClient.getCitiesByStateAndCountryIso2(countryIso, stateIso).getBody();
-        } catch (NullPointerException e) {
-            throw new StateNotFound();
-        } catch (Exception e) {
-            log.error("Error communicating to country state city: {}", e.getMessage());
-            e.printStackTrace();
+    public List<CityResponse> getAllCitiesByStateIso2(String countryIso, String stateIso) {
+        var country = countryRepository.findByIso2(countryIso)
+                .orElseThrow(CommunicationToCountryStateCityServerException::new);
+        var state = stateRepository.findByIso2(stateIso)
+                .orElseThrow(CommunicationToCountryStateCityServerException::new);
+        if (!Objects.equals(state.getCountry().getIso2(), country.getIso2())) {
             throw new CommunicationToCountryStateCityServerException();
         }
+        return state.getCities().stream().map(CityResponse::new).collect(Collectors.toList());
     }
 
     @Override
-    public City getCityByIdAndStateAndCountryIso(String countryIso, String stateIso, Long cityId) {
+    public CityResponse getCityByIdAndStateAndCountryIso(String countryIso, String stateIso, Long cityId) {
         return getAllCitiesByStateIso2(countryIso, stateIso).stream()
                 .filter(city -> Objects.equals(city.getId(), cityId))
                 .findFirst()
