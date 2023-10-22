@@ -1,12 +1,12 @@
 package br.com.events.location.application.service;
 
-import br.com.events.location.application.service.exception.AddressNotFoundException;
 import br.com.events.location.application.service.exception.CityNotFound;
 import br.com.events.location.application.service.exception.CommunicationToCountryStateCityServerException;
 import br.com.events.location.data.inbound.Address;
 import br.com.events.location.data.inbound.CityResponse;
 import br.com.events.location.data.inbound.CountryResponse;
 import br.com.events.location.data.inbound.StateResponse;
+import br.com.events.location.data.repository.CityRepository;
 import br.com.events.location.data.repository.CountryRepository;
 import br.com.events.location.data.repository.StateRepository;
 import br.com.events.location.infrastructure.feign.countryStateCity.CountryStateCityFeignClient;
@@ -27,6 +27,7 @@ public class LocationServiceImpl implements LocationService {
     private final CountryStateCityFeignClient countryStateCityFeignClient;
     private final CountryRepository countryRepository;
     private final StateRepository stateRepository;
+    private final CityRepository cityRepository;
 
     @Override
     public List<CountryResponse> getAllCountries() {
@@ -67,22 +68,8 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public void validateIfAddressExists(Address address) {
-        try {
-            var citiesResponse = countryStateCityFeignClient.getCitiesByStateAndCountryIso2(
-                    address.getCountryIso(), address.getStateIso()
-            );
-            var cities = Objects.requireNonNull(citiesResponse.getBody());
-
-            cities.stream().filter(
-                            feignCity -> Objects.equals(address.getCityId(), feignCity.getId())
-                    ).findFirst()
-                    .orElseThrow(
-                            AddressNotFoundException::new
-                    );
-        } catch (NullPointerException npe) {
-            log.error("Error communicating to country state city");
-            npe.printStackTrace();
-            throw new CommunicationToCountryStateCityServerException();
-        }
+        var citiesResponse = cityRepository.checkAddress(
+                address.getCountryIso(), address.getStateIso(), address.getCityId()
+        ).orElseThrow(CommunicationToCountryStateCityServerException::new);
     }
 }
