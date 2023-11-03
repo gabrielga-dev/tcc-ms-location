@@ -1,6 +1,6 @@
 package br.com.events.location.util;
 
-import br.com.events.location.infrastructure.exception.BusinessException;
+import br.com.events.location.adapter.exception.BusinessException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
