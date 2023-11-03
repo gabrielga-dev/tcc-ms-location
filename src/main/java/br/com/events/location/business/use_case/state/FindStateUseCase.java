@@ -14,6 +14,6 @@ public class FindStateUseCase {
     private final StateRepository stateRepository;
 
     public Optional<State> byCountryAndStateIso2(String countryIso2, String stateIso2){
-        return stateRepository.findByIso2AndCountry_Iso2(stateIso2, countryIso2);
+        return stateRepository.findByIso2AndCountryIso2(countryIso2, stateIso2);
     }
 }
