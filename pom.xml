@@ -58,12 +58,6 @@
             <version>${swagger.version}</version>
         </dependency>
 
-        <!--    FEIGN CLIENTS    -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
-
         <!--    VALIDATION    -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

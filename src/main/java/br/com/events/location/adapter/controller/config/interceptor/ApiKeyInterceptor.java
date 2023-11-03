@@ -1,4 +1,4 @@
-package br.com.events.location.adapter.controller.config.filter;
+package br.com.events.location.adapter.controller.config.interceptor;
 
 import br.com.events.location.adapter.exception.InvalidApiKeyException;
 import br.com.events.location.adapter.exception.NoApiKeyReceivedException;
@@ -22,7 +22,7 @@ import java.util.Optional;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ApiKeyFilter implements HandlerInterceptor {
+public class ApiKeyInterceptor implements HandlerInterceptor {
 
     @Value("${valid.api.keys}")
     private List<String> validApiKeys;

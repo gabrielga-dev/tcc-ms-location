@@ -1,4 +1,4 @@
-package br.com.events.location.adapter.controller.config.filter;
+package br.com.events.location.adapter.controller.config.interceptor;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -12,13 +12,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Component
 @RequiredArgsConstructor
-public class FilterConfig implements WebMvcConfigurer {
+public class InterceptorConfig implements WebMvcConfigurer {
 
-    private final ApiKeyFilter apiKeyFilter;
+    private final ApiKeyInterceptor apiKeyInterceptor;
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
-        registry.addInterceptor(apiKeyFilter).addPathPatterns("/v1/**").
+        registry.addInterceptor(apiKeyInterceptor).addPathPatterns("/v1/**").
             excludePathPatterns(
                 "/",
                 "/v3/api-docs",
