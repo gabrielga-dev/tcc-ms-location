@@ -7,6 +7,7 @@ import br.com.events.location.domain.io.location.CityResponse;
 import br.com.events.location.domain.io.location.CountryResponse;
 import br.com.events.location.domain.io.location.StateResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import java.util.List;
  *
  * @author Gabriel Guimarães de Almeida
  */
+@Slf4j
 @RestController
 @RequestMapping("/v1/location")
 @RequiredArgsConstructor
@@ -31,6 +33,7 @@ public class LocationControllerImpl implements LocationController {
     @Override
     @GetMapping("/countries")
     public ResponseEntity<List<CountryResponse>> getAllCountries() {
+        log.info("[START] getAllCountries");
         return ResponseEntity.ok(locationService.getAllCountries());
     }
 
@@ -39,6 +42,7 @@ public class LocationControllerImpl implements LocationController {
     public ResponseEntity<List<StateResponse>> getAllStatesByCountryIso2(
             @PathVariable("countryIso") String countryIso
     ) {
+        log.info("[START] getAllStatesByCountryIso2");
         return ResponseEntity.ok(locationService.getAllStatesByCountryIso2(countryIso));
     }
 
@@ -48,6 +52,7 @@ public class LocationControllerImpl implements LocationController {
             @PathVariable("countryIso") String countryIso,
             @PathVariable("stateIso") String stateIso
     ) {
+        log.info("[START] getAllCitiesByStateAndCountryIso2");
         return ResponseEntity.ok(locationService.getAllCitiesByStateIso2(countryIso, stateIso));
     }
 
@@ -58,12 +63,14 @@ public class LocationControllerImpl implements LocationController {
             @PathVariable("stateIso") String stateIso,
             @PathVariable("cityId") Long cityId
     ) {
+        log.info("[START] getCityByIdAndStateAndCountryIso");
         return ResponseEntity.ok(locationService.getCityByIdAndStateAndCountryIso(countryIso, stateIso, cityId));
     }
 
     @Override
     @GetMapping("/check-address")
     public ResponseEntity<Void> validateIfAddressExists(@Valid Address address) {
+        log.info("[START] validateIfAddressExists");
         locationService.validateIfAddressExists(address);
         return ResponseEntity.noContent().build();
     }
