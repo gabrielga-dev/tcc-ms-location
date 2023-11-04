@@ -26,7 +26,7 @@ import java.util.List;
 @Slf4j
 @CrossOrigin
 @RestController
-@RequestMapping("/v1/location")
+@RequestMapping(value = "/v1/location")
 @RequiredArgsConstructor
 public class LocationControllerImpl implements LocationController {
 
